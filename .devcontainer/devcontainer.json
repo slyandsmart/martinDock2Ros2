@@ -1,0 +1,32 @@
+{
+  "name": "galacticMartin",
+  "dockerFile": "Dockerfile",
+  "runArgs": [
+    "--privileged",
+    "--network=host"
+  ],
+  "workspaceMount": "source=${localWorkspaceFolder},target=/${localWorkspaceFolderBasename},type=bind",
+  "workspaceFolder": "/${localWorkspaceFolderBasename}",
+  "mounts": [
+    "source=${localEnv:HOME}${localEnv:USERPROFILE}/.bash_history,target=/home/vscode/.bash_history,type=bind"
+],
+"features": {
+	"ghcr.io/prulloac/devcontainer-features/latex:1": {}
+},
+"customizations": {
+  // Configure properties specific to VS Code.
+  "vscode": {
+    // Add the IDs of extensions you want installed when the container is created.
+    "extensions": [
+      "streetsidesoftware.code-spell-checker",
+      "oderwat.indent-rainbow",
+      "davidanson.vscode-markdownlint",
+      "ms-python.python",
+      "mhutchie.git-graph",
+      ""
+    ]
+
+  }
+}
+}
+
