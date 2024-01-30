@@ -27,17 +27,32 @@ RUN sudo usermod --append --groups video $USERNAME
 # Update all packages
 RUN sudo apt update && sudo apt upgrade -y
 
-# Install Git
-RUN sudo apt install -y git
+# Install Git and other ubuntu stuff
+RUN sudo apt install -y \
+git \
+python3-pip
+
+# Update pip 
+RUN python3 -m pip install pip --upgrade --force
+
+
+# Install python3 dependencies
+#COPY ./python_requirements.txt /workspace
+#RUN pip3 install --no-cache-dir --upgrade -r python_requirements.txt
+RUN pip install \
+numpy \
+scipy \
+matplotlib \
+roboticstoolbox-python
+
 
 # Rosdep update
 RUN rosdep update
 
 # Source the ROS setup file
 RUN echo "source /opt/ros/${ROS_DISTRO}/setup.bash" >> ~/.bashrc
+RUN export PATH="/home/vscode.local/bin:$PATH"
+#RUN source ~/.bashrc   
 
-WORKDIR /home/c8501077/projects/martinDock2Ros2/workspace
+WORKDIR /martinDock2Ros2/workspace
 
-# Install python3 dependencies
-COPY ./python_requirements.txt /workspace
-#RUN pip3 install --no-cache-dir --upgrade -r python_requirements.txt

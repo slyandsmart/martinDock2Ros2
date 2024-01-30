@@ -2,6 +2,7 @@
   "name": "galacticMartin",
   "dockerFile": "Dockerfile",
   "runArgs": [
+    "--name", "galacticMartin",
     "--privileged",
     "--network=host"
   ],
