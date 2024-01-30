@@ -36,4 +36,4 @@ RUN rosdep update
 # Source the ROS setup file
 RUN echo "source /opt/ros/${ROS_DISTRO}/setup.bash" >> ~/.bashrc
 
-WORKDIR /home/c8501077/projects/martinDock2Ros2/workspace
+WORKDIR /martinDock2Ros2/workspace

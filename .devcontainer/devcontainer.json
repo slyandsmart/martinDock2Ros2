@@ -6,11 +6,15 @@
     "--privileged",
     "--network=host"
   ],
+  "containerEnv": {
+    "DISPLAY": "unix:0"
+},
   "workspaceMount": "source=${localWorkspaceFolder},target=/${localWorkspaceFolderBasename},type=bind",
   "workspaceFolder": "/${localWorkspaceFolderBasename}",
   "mounts": [
     "source=${localEnv:HOME}${localEnv:USERPROFILE}/.bash_history,target=/home/vscode/.bash_history,type=bind",
-    "source=projectname-bashhistory,target=/commandhistory,type=volume"
+    "source=projectname-bashhistory,target=/commandhistory,type=volume",
+    "source=/tmp/.X11-unix,target=/tmp/.X11-unix,type=bind,consistency=cached"
 ],
 "customizations": {
   // Configure properties specific to VS Code.
@@ -22,7 +26,9 @@
       "davidanson.vscode-markdownlint",
       "ms-python.python",
       "mhutchie.git-graph",
-      ""
+      "ms-azuretools.vscode-docker",
+      "github.copilot",
+      "github.copilot-chat"
     ]
 
   }
