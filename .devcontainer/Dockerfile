@@ -1,4 +1,4 @@
-FROM osrf/ros:galactic-desktop-focal
+FROM osrf/ros:humble-desktop-jammy
 # Add vscode user with same UID and GID as your host system
 # (copied from https://code.visualstudio.com/remote/advancedcontainers/add-nonroot-user#_creating-a-nonroot-user)
 ARG USERNAME=vscode
@@ -37,7 +37,3 @@ RUN rosdep update
 RUN echo "source /opt/ros/${ROS_DISTRO}/setup.bash" >> ~/.bashrc
 
 WORKDIR /home/c8501077/projects/martinDock2Ros2/workspace
-
-# Install python3 dependencies
-COPY ./python_requirements.txt /workspace
-#RUN pip3 install --no-cache-dir --upgrade -r python_requirements.txt

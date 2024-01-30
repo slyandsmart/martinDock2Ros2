@@ -1,5 +1,5 @@
 {
-  "name": "galacticMartin",
+  "name": "humbleMartin",
   "dockerFile": "Dockerfile",
   "runArgs": [
     "--privileged",
