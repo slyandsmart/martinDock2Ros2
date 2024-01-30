@@ -2,6 +2,7 @@
   "name": "humbleMartin",
   "dockerFile": "Dockerfile",
   "runArgs": [
+    "--name", "humbleMartin",
     "--privileged",
     "--network=host"
   ],
@@ -11,9 +12,6 @@
     "source=${localEnv:HOME}${localEnv:USERPROFILE}/.bash_history,target=/home/vscode/.bash_history,type=bind",
     "source=projectname-bashhistory,target=/commandhistory,type=volume"
 ],
-"features": {
-	"ghcr.io/prulloac/devcontainer-features/latex:1": {}
-},
 "customizations": {
   // Configure properties specific to VS Code.
   "vscode": {

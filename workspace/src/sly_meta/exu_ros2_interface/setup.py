@@ -1,5 +1,4 @@
 from setuptools import setup
-
 package_name = 'exu_ros2_interface'
 
 setup(
