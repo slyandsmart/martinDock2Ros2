@@ -11,12 +11,15 @@ RUN groupadd --gid $USER_GID $USERNAME \
     && echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME \
     && chmod 0440 /etc/sudoers.d/$USERNAME
 
-RUN SNIPPET="export PROMPT_COMMAND='history -a' && export HISTFILE=/commandhistory/.bash_history" \
-    && mkdir /commandhistory \
+COPY .bashrc /home/$USERNAME/.bashrc
+#RUN SNIPPET="export PROMPT_COMMAND='history -a' && export HISTFILE=/commandhistory/.bash_history" \
+RUN mkdir /commandhistory \
     && touch /commandhistory/.bash_history \
-    && chown -R $USERNAME /commandhistory \
-    && echo "$SNIPPET" >> "/home/$USERNAME/.bashrc"
+    && chown -R $USERNAME /commandhistory 
+# && echo "$SNIPPET" >> "/home/$USERNAME/.bashrc"
 
+#https://pagepro.co/blog/autocomplete-git-commands-and-branch-names-in-terminal/
+COPY .git-completion.bash /home/$USERNAME/.git-completion.bash
 
 # Switch from root to user
 USER $USERNAME
@@ -27,13 +30,19 @@ RUN sudo usermod --append --groups video $USERNAME
 # Update all packages
 RUN sudo apt update && sudo apt upgrade -y
 
+# Install python packages
+RUN sudo apt update && sudo apt install -y \
+python3-pip
+
+RUN pip3 install \
+numpy \
+exudyn \
+roboticstoolbox-python
+
 # Install Git
 RUN sudo apt install -y git
 
 # Rosdep update
 RUN rosdep update
-
-# Source the ROS setup file
-RUN echo "source /opt/ros/${ROS_DISTRO}/setup.bash" >> ~/.bashrc
 
 WORKDIR /martinDock2Ros2/workspace
