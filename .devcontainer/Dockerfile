@@ -12,6 +12,8 @@ RUN groupadd --gid $USER_GID $USERNAME \
     && chmod 0440 /etc/sudoers.d/$USERNAME
 
 COPY .bashrc /home/$USERNAME/.bashrc
+COPY tmux.conf /home/$USERNAME/tmux.conf
+
 #RUN SNIPPET="export PROMPT_COMMAND='history -a' && export HISTFILE=/commandhistory/.bash_history" \
 RUN mkdir /commandhistory \
     && touch /commandhistory/.bash_history \
@@ -32,12 +34,19 @@ RUN sudo apt update && sudo apt upgrade -y
 
 # Install python packages
 RUN sudo apt update && sudo apt install -y \
-python3-pip
+python3-pip \
+tmux \
+tmuxinator \
+htop \
+nano
+
 
 RUN pip3 install \
 numpy \
 exudyn \
-roboticstoolbox-python
+roboticstoolbox-python \
+python-statemachine \
+scipy
 
 # Install Git
 RUN sudo apt install -y git

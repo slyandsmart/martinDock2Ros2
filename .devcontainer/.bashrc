@@ -121,9 +121,12 @@ if [ -f ~/.git-completion.bash ]; then
 fi
 
 export PROMPT_COMMAND='history -a' && export HISTFILE=/commandhistory/.bash_history
+tmux="tmux -2 -f ~/tmux.conf"
 
 # Source the ROS setup file
 source /opt/ros/humble/setup.bash
+source /martinDock2Ros2/workspace/install/setup.bash
+echo ROS 2 sourced
 
 
 
