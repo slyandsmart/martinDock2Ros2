@@ -8,11 +8,14 @@ class MyStateMachine(StateMachine):
     state_a = State(initial=True)
     state_b = State()
     state_c = State()
-    trigger = (state_a.to(state_b,cond='condition_success') | 
+    trigger = (
+                state_a.to(state_b,cond='condition_success') | 
                 state_a.to(state_c,cond='condition_success2') | 
-                state_a.to(state_a,cond='eigene') | 
+                state_a.to.itself(cond='condition_self') | 
                 state_b.to(state_c) | 
                 state_c.to(state_a))
+
+
 class StateMachineNode(Node):
     def __init__(self):
         super().__init__('state_machine_node')
@@ -27,7 +30,7 @@ class StateMachineNode(Node):
         return self.new_state == 'StateA'
     def condition_success2(self):
         return self.new_state == 'StateB'
-    def eigene(self):
+    def condition_self(self):
         return self.new_state == 'nix'
 
     def state_transition_callback(self, msg):
