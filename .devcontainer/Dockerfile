@@ -40,13 +40,15 @@ tmuxinator \
 htop \
 nano
 
-
+# python module installation with prefered versions 
 RUN pip3 install \
-numpy \
-exudyn \
-roboticstoolbox-python \
+numpy==1.26.4 \
+scipy==1.11.4 \
+exudyn==1.8.0 \
+roboticstoolbox-python==1.1.0 \
 python-statemachine \
-scipy
+scikit-image
+
 
 # Install Git
 RUN sudo apt install -y git
