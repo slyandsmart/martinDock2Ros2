@@ -1,15 +1,14 @@
-FROM osrf/ros:galactic-desktop-focal
-# Add vscode user with same UID and GID as your host system
-# (copied from https://code.visualstudio.com/remote/advancedcontainers/add-nonroot-user#_creating-a-nonroot-user)
-ARG USERNAME=vscode
-ARG USER_UID=1000
-ARG USER_GID=$USER_UID
-RUN groupadd --gid $USER_GID $USERNAME \
-    && useradd -s /bin/bash --uid $USER_UID --gid $USER_GID -m $USERNAME \
-    && apt-get update \
-    && apt-get install -y sudo \
-    && echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME \
-    && chmod 0440 /etc/sudoers.d/$USERNAME
+FROM osrf/ros:jazzy-desktop
+
+ARG USERNAME=ubuntu
+
+RUN apt-get update \
+    && apt-get install --yes --no-install-recommends sudo \
+    && echo "${USERNAME} ALL=(root) NOPASSWD:ALL" \
+        > "/etc/sudoers.d/${USERNAME}" \
+    && chmod 0440 "/etc/sudoers.d/${USERNAME}" \
+    && rm -rf /var/lib/apt/lists/*
+
 
 RUN SNIPPET="export PROMPT_COMMAND='history -a' && export HISTFILE=/commandhistory/.bash_history" \
     && mkdir /commandhistory \
@@ -17,33 +16,47 @@ RUN SNIPPET="export PROMPT_COMMAND='history -a' && export HISTFILE=/commandhisto
     && chown -R $USERNAME /commandhistory \
     && echo "$SNIPPET" >> "/home/$USERNAME/.bashrc"
 
-
-# Switch from root to user
-USER $USERNAME
-
-# Add user to video group to allow access to webcam
-RUN sudo usermod --append --groups video $USERNAME
+USER root
 
 # Update all packages
 RUN sudo apt update && sudo apt upgrade -y
 
 # Install Git and other ubuntu stuff
 RUN sudo apt install -y \
-git \
-python3-pip
+    software-properties-common \
+    build-essential \
+    cmake \
+    git \
+    git-lfs \
+    wget \
+    nano \
+    eza \
+    unzip \
+    mesa-utils \
+    xterm \
+    ripgrep \
+    htop \
+    bat \
+    less \
+    zsh
 
-# Update pip 
-RUN python3 -m pip install pip --upgrade --force
+# python required dependencies
+COPY requirements.txt /tmp/requirements.txt
 
+# install python system packages
+RUN apt install -y python3-pip python3-venv
 
-# Install python3 dependencies
-#COPY ./python_requirements.txt /workspace
-#RUN pip3 install --no-cache-dir --upgrade -r python_requirements.txt
-RUN pip install \
-numpy \
-scipy \
-matplotlib \
-roboticstoolbox-python
+# initialize virtual environment
+ENV VIRTUAL_ENV=/python/venv
+ENV PATH="${VIRTUAL_ENV}/bin:${PATH}"
+RUN python3 -m venv "${VIRTUAL_ENV}"
+
+# install python dependencies inside venv
+# NOTE: dont use `python3 -m pip`!
+#		`pip` resolves to `$VIRTUAL_ENV`/bin/pip,
+# 		while the former does not (nessacerely)!
+RUN pip install --upgrade pip setuptools wheel
+RUN pip install --requirement /tmp/requirements.txt
 
 
 # Rosdep update
@@ -54,5 +67,7 @@ RUN echo "source /opt/ros/${ROS_DISTRO}/setup.bash" >> ~/.bashrc
 RUN export PATH="/home/vscode.local/bin:$PATH"
 #RUN source ~/.bashrc   
 
+# Switch from root to user
+USER $USERNAME
 WORKDIR /martinDock2Ros2/workspace
 
